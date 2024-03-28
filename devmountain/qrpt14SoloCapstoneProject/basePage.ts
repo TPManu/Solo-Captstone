@@ -1,4 +1,4 @@
-import {Builder, By, Capabilities, until, WebDriver, WebElement} from "selenium-webdriver";
+import {Builder, By, Capabilities, until, WebDriver, WebElement, Actions} from "selenium-webdriver";
 import { VoidExpression } from "typescript";
 const chromedriver = require("chromedriver")
 import { Manu } from "./manu_page";
@@ -59,5 +59,20 @@ export class BasePage {
     };
     async getRecommendations() {
         return this.getText(this.link); 
-    };   
+    };
+    async clickAndDrag(driver: WebDriver, sourceLocator: By, targetLocator: By): Promise<void> {
+        try {
+            // Find source and target elements
+            const sourceElement = await driver.findElement(sourceLocator);
+            const targetElement = await driver.findElement(targetLocator);
+    
+            // Perform click and drag action
+            const actions = driver.actions({ bridge: true });
+            await actions.move({ origin: sourceElement }).press().move({ origin: targetElement }).release().perform();
+        } catch (error) {
+            console.error('An error occurred during click and drag operation:', error);
+        }
+    }
 }
+
+
